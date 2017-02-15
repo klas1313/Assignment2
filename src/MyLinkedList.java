@@ -11,53 +11,113 @@
  */
 public class MyLinkedList {
 
-    private static Node firstNode;
-    private static int size;
+    private Node firstNode;
+    private int size;
 
 
-    public MyLinkedList(){
+    public MyLinkedList() {
 //        Provide a default constructor that initializes an empty
 //        Linked List, with a size of 0
-       firstNode = new Node(null);
+        //    firstNode = new Node(null);
        size = 0;
     }
 
-    public void insert(Object theItem, Node newNode){
-//        Insert a new item at the front of the list.
-//        Duplicate items are permitted.
-        Node insertedNode = new Node(theItem);
-        firstNode = insertedNode;
+    public void insert(Object data){
 
-        if (firstNode != null) {
-            while (firstNode.getNext() != null) {
-                firstNode = firstNode.getNext();
-            }
-            firstNode.setNext(insertedNode);
+        // Initialize Node only incase of 1st element
+        if (firstNode == null) {
+            firstNode = new Node(data);
         }
+
+        Node tempNode = new Node(data);
+        Node currentNode = firstNode;
+
+        // Let's check for NPE before iterate over crunchifyCurrent
+        if (currentNode != null) {
+
+            // starting at the head node, crawl to the end of the list and then add element after last node
+            while (currentNode.getNext() != null) {
+                currentNode = currentNode.getNext();
+            }
+
+            // the last node's "next" reference set to our new node
+            currentNode.setNext(tempNode);
+        }
+
+        // increment the number of elements variable
         size++;
     }
 
-    public Object delete(String newString){
+
+    public Object get(int index) {
+       // System.out.println("Got into here?");
+        if (index < 0) {
+            return null; //Here you could implement error handling to handle when someone passes a negative number
+        }
+        Node currentNode = null;
+
+        if (firstNode != null) {
+            currentNode = firstNode.getNext();
+           // System.out.println(currentNode.getItem());
+
+            //System.out.println("got into the if before for?");
+
+            for (int i=0; i<index; i++) {
+               // System.out.println("This the for loop, index is " + i);
+                if (currentNode.getNext() == null) {
+                    return null;          //This if statement checks if they passed in an index higher than contained currently in the list, if they did, return null; b/c it doesn't exist!
+                }
+                currentNode = currentNode.getNext();
+            }
+            return currentNode.getItem(); //If they entered a valid index, will successfully go through for loop finding the last node from the index, return it's value
+        }
+        return currentNode;  //Return the node
+
+    }
+
+
+    public Object delete(Object data) {
+        System.out.println("inside the delete method");
+        System.out.println(data);
+        System.out.println();
 //        Delete the first instance of a given item, if
 //        it exists in the list. Use the equals method of the Object class to compare two
 //                Objects. Return a reference to the deleted item, or null if it was not found.
         //Node deletedNode = new Node(newString);
-
+        Node currentNode = firstNode;
+        Node prevNode = firstNode;
         if(firstNode != null){
-            firstNode.setNext(firstNode);
+
+            while(currentNode.getItem() != data){
+                //System.out.println(currentNode.getNext());
+                if(currentNode.getNext() == null){
+                    System.out.println("Got in here?!?!?");      //handles if value not found in list.
+                    return false;
+                }
+                prevNode = currentNode;
+                currentNode = currentNode.getNext(); //Iterate to the next node.
+            }
+            System.out.println("removing the node now");
+            Node nodeToReturn = currentNode;
+            prevNode.setNext(prevNode.getNext().getNext());
+            System.out.println("The node in front of the deleted one is ");
+            System.out.println(currentNode.getNext().getItem());
+            System.out.println();
+            size--;
+            return nodeToReturn.getItem();
         }
-        size--;
-        return firstNode;
+
+        return false;
     }
 
-    public int getSize(){
+    public int getSize() {
 //        Return the number of items in the list. In order to implement this
 //        efficiently, you should keep a private instance variable that maintains a count of the
 //        number of items in the list.
         return size;
     }
 
-    public Object initTraversal(){
+    public Object initTraversal() {
 //        Initialize a private instance variable to point to the
 //        first Node in the list (or null if the list is empty). Return the item in the first Node (if
 //        the list is not empty) or else return null.
@@ -68,7 +128,7 @@ public class MyLinkedList {
         }
     }
 
-    public Object traverse(){
+    public Object traverse() {
 //        Advance the instance variable from initTraversal to the next
 //        node in the list (if it exists) or else set it to null if the end of the list has been reached.
 //        Return the item pointed to (if the traversal variable is not null) or else return null
@@ -105,7 +165,7 @@ public class MyLinkedList {
 //
 //    }
 
-    public String toStringItem(Object theItem){
+    public String toStringItem(Object theItem) {
 
         theItem = firstNode.getItem();
         String itemToString = theItem.toString();
@@ -116,31 +176,32 @@ public class MyLinkedList {
             return toStringItem(itemToString + "_");
         }
     }
-}
 
-class Node {  //need to implement my own. This must store "object"
-    private Object item;
-    private Node next;
 
-    public Node(Object item) {//initial Node
-        this.item = item;
-        next = null;
-    }
+    private class Node {  //need to implement my own. This must store "object"
+        Object item;
+        Node next;
 
-    public Node(Object item, Node next) {//in case, I need a specific node
-        this.item = item;
-        this.next = next;
-    }
+        public Node(Object insertItem) { //initial Node
+            item = insertItem;
+            next = null;
+        }
 
-    public Object getItem() {
-        return item;
-    }
+        public Node(Object item, Node next) {//in case, I need a specific node
+            this.item = item;
+            this.next = next;
+        }
 
-    public Node getNext() {
-        return next;
-    }
+        public Object getItem() {
+            return item;
+        }
 
-    public void setNext(Node next) {
-        this.next = next;
+        public Node getNext() {
+            return next;
+        }
+
+        public void setNext(Node next) {
+            this.next = next;
+        }
     }
 }
