@@ -18,35 +18,38 @@ public class MyLinkedList {
     public MyLinkedList() {
 //        Provide a default constructor that initializes an empty
 //        Linked List, with a size of 0
-        //    firstNode = new Node(null);
+        // firstNode = new Node(null);
        size = 0;
     }
 
     public void insert(Object data){
-
+        Node tempNode = new Node(data);
+       // System.out.println("The new nodes data is " + tempNode.getItem());
         // Initialize Node only incase of 1st element
         if (firstNode == null) {
-            firstNode = new Node(data);
+            firstNode = tempNode;
+           //firstNode.setNext(null);
         }
-
-        Node tempNode = new Node(data);
-        Node currentNode = firstNode;
-
-        // Let's check for NPE before iterate over crunchifyCurrent
-        if (currentNode != null) {
-
-            // starting at the head node, crawl to the end of the list and then add element after last node
-            while (currentNode.getNext() != null) {
-                currentNode = currentNode.getNext();
-            }
-
-            // the last node's "next" reference set to our new node
-            currentNode.setNext(tempNode);
+        else {
+            tempNode.setNext(firstNode);
+            firstNode = tempNode;
         }
 
         // increment the number of elements variable
         size++;
     }
+//    public Object getHead(){
+//        return firstNode.getItem();
+//    }
+//    public Object getSecond(){
+//        Node secondNode = firstNode.getNext();
+//        System.out.println("the second nodes item is "+secondNode.getItem());
+//        return secondNode.getItem();
+//    }
+//    public Object getThird(){
+//        Node thirdNode = firstNode.getNext().getNext();
+//        return thirdNode.getItem();
+//    }
 
 
     public Object get(int index) {
@@ -54,10 +57,10 @@ public class MyLinkedList {
         if (index < 0) {
             return null; //Here you could implement error handling to handle when someone passes a negative number
         }
-        Node currentNode = null;
+        Node currentNode = firstNode;
 
-        if (firstNode != null) {
-            currentNode = firstNode.getNext();
+        if (currentNode != null) {
+            currentNode = firstNode;
            // System.out.println(currentNode.getItem());
 
             //System.out.println("got into the if before for?");
